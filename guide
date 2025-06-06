@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Art of the Demo: A Guide for MoEngage CSMs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Professional -->
+    <!-- Application Structure Plan: The SPA is designed with a top-down, user-controlled flow. A sticky tab-based navigation allows users to jump to any of the six core topics without linear scrolling. This non-linear structure respects the user's time and allows them to focus on specific areas of interest. Each content section uses interactive cards and visual layouts (like checklists and process flows) instead of static lists. This was chosen to make the instructional content more engaging, memorable, and easier to digest than a simple document, promoting active learning over passive reading. -->
+    <!-- Visualization & Content Choices: Report Info: The source material is qualitative best practices for demos. Goal: To organize and present these text-based pointers in an engaging, interactive format. Viz/Presentation Method: Instead of charts (no quantitative data), I've used interactive components built with HTML/Tailwind. 'Communication Skills' uses clickable icon cards. 'Storytelling' uses a CSS-based process flow diagram. 'Best Practices' is an interactive checklist. Interaction: Clicking/hovering on elements reveals more information, and the checklist provides tactile feedback. Justification: These methods turn passive text into an active learning experience, improving retention. Library/Method: Vanilla JS for interactivity, Tailwind CSS for styling. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-active {
+            border-color: #0d9488;
+            color: #0d9488;
+            font-weight: 600;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .checklist-item input:checked + label .checklist-icon {
+            background-color: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+        .checklist-item input:checked + label span {
+            text-decoration: line-through;
+            color: #6b7280;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0d9488;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: none; /* Hidden by default */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto px-4 py-8 md:py-12">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-teal-700">The Art of the Demo</h1>
+            <p class="text-lg text-gray-600 mt-2">An Interactive Guide for MoEngage Customer Success Managers</p>
+        </header>
+
+        <nav class="sticky top-0 bg-gray-50/90 backdrop-blur-sm z-10 mb-8 border-b border-gray-200">
+            <div class="overflow-x-auto">
+                <ul class="flex space-x-4 sm:space-x-8 whitespace-nowrap -mb-px px-2">
+                    <li><button data-tab="communication" class="nav-tab text-sm sm:text-base py-4 px-1 border-b-2 border-transparent hover:border-teal-500 hover:text-teal-600">Communication</button></li>
+                    <li><button data-tab="engagement" class="nav-tab text-sm sm:text-base py-4 px-1 border-b-2 border-transparent hover:border-teal-500 hover:text-teal-600">Engagement</button></li>
+                    <li><button data-tab="storytelling" class="nav-tab text-sm sm:text-base py-4 px-1 border-b-2 border-transparent hover:border-teal-500 hover:text-teal-600">Storytelling</button></li>
+                    <li><button data-tab="upsell" class="nav-tab text-sm sm:text-base py-4 px-1 border-b-2 border-transparent hover:border-teal-500 hover:text-teal-600">Highlighting Upsells</button></li>
+                    <li><button data-tab="objections" class="nav-tab text-sm sm:text-base py-4 px-1 border-b-2 border-transparent hover:border-teal-500 hover:text-teal-600">Handling Objections</button></li>
+                    <li><button data-tab="delivery" class="nav-tab text-sm sm:text-base py-4 px-1 border-b-2 border-transparent hover:border-teal-500 hover:text-teal-600">Setup & Delivery</button></li>
+                </ul>
+            </div>
+        </nav>
+
+        <main>
+            <section id="communication" class="content-section">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800">Effective Communication Skills</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Mastering how you communicate is the foundation of a great demo. It’s not just what you say, but how you say it.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="card bg-white p-6 rounded-lg border border-gray-200">
+                        <h3 class="text-xl font-semibold text-teal-700">Know Your Audience</h3>
+                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                            <li>Research their business, goals, and pain points.</li>
+                            <li>Identify stakeholders and their roles.</li>
+                            <li>Tailor your language and examples.</li>
+                        </ul>
+                    </div>
+                    <div class="card bg-white p-6 rounded-lg border border-gray-200">
+                        <h3 class="text-xl font-semibold text-teal-700">Clarity & Conciseness</h3>
+                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                            <li>Avoid jargon; explain technical terms simply.</li>
+                            <li>Use simple, direct language.</li>
+                            <li>Practice impactful opening/closing statements.</li>
+                        </ul>
+                    </div>
+                    <div class="card bg-white p-6 rounded-lg border border-gray-200">
+                        <h3 class="text-xl font-semibold text-teal-700">Pace & Tone</h3>
+                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                            <li>Speak clearly at a moderate pace.</li>
+                            <li>Vary your tone to maintain interest.</li>
+                            <li>Use strategic pauses for emphasis.</li>
+                        </ul>
+                    </div>
+                    <div class="card bg-white p-6 rounded-lg border border-gray-200">
+                        <h3 class="text-xl font-semibold text-teal-700">Body Language</h3>
+                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                            <li>**In-Person:** Open posture, natural gestures.</li>
+                            <li>**Virtual:** Look into the camera, sit upright.</li>
+                            <li>Project confidence and ensure good lighting.</li>
+                        </ul>
+                    </div>
+                     <div class="card bg-white p-6 rounded-lg border border-gray-200">
+                        <h3 class="text-xl font-semibold text-teal-700">Active Listening</h3>
+                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                            <li>Listen carefully to questions and reactions.</li>
+                            <li>Paraphrase to confirm understanding.</li>
+                            <li>Make the customer feel heard.</li>
+                        </ul>
+                    </div>
+                    <div class="card bg-white p-6 rounded-lg border border-gray-200">
+                        <h3 class="text-xl font-semibold text-teal-700">Confidence</h3>
+                        <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                            <li>Believe in your product and its value.</li>
+                            <li>Be humble, open, and helpful.</li>
+                            <li>Avoid arrogance; you're a guide, not a lecturer.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="engagement" class="content-section">
+                 <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800">Engaging the Customer</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">A demo is a conversation, not a monologue. Use these techniques to keep your audience hooked from start to finish.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="card bg-white p-6 rounded-lg border border-gray-200">
+                        <h3 class="text-xl font-semibold text-teal-700">Start with a Hook</h3>
+                        <p class="mt-2 text-gray-600">Begin with a compelling stat, story, or question addressing their pain point. Clearly state the agenda and the value they'll get.</p>
+                    </div>
+                    <div class="card bg-white p-6 rounded-lg border border-gray-200">
+                        <h3 class="text-xl font-semibold text-teal-700">Be Interactive</h3>
+                        <p class="mt-2 text-gray-600">Ask open-ended questions. Pause to check for understanding. Encourage participation to make it a two-way street.</p>
+                    </div>
+                    <div class="card bg-white p-6 rounded-lg border border-gray-200">
+                        <h3 class="text-xl font-semibold text-teal-700">Personalize Everything</h3>
+                        <p class="mt-2 text-gray-600">Use the customer's name and company. Reference specifics from your discovery calls to show you've done your homework.</p>
+                    </div>
+                    <div class="card bg-white p-6 rounded-lg border border-gray-200">
+                        <h3 class="text-xl font-semibold text-teal-700">Stay Relevant</h3>
+                        <p class="mt-2 text-gray-600">Avoid "feature dumping." Only show features relevant to their needs and continuously tie them back to their business goals.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="storytelling" class="content-section">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800">Crafting a Compelling Narrative</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Facts tell, but stories sell. Weave your demo points into a narrative that illustrates the journey from problem to solution.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg border border-gray-200">
+                    <h3 class="text-2xl font-semibold text-center mb-6">The Demo Story Arc</h3>
+                    <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
+                        <div class="text-center p-4 rounded-lg bg-red-50 border border-red-200 w-full md:w-1/4">
+                            <h4 class="font-bold text-red-700">1. The "Before"</h4>
+                            <p class="text-sm text-red-600">Their current challenges & pain points.</p>
+                        </div>
+                        <div class="text-gray-400 font-mono hidden md:block">&gt;&gt;</div>
+                        <div class="text-center p-4 rounded-lg bg-blue-50 border border-blue-200 w-full md:w-1/4">
+                            <h4 class="font-bold text-blue-700">2. The Problem</h4>
+                            <p class="text-sm text-blue-600">Articulate the core problem MoEngage solves.</p>
+                        </div>
+                        <div class="text-gray-400 font-mono hidden md:block">&gt;&gt;</div>
+                        <div class="text-center p-4 rounded-lg bg-teal-50 border border-teal-200 w-full md:w/1-4">
+                            <h4 class="font-bold text-teal-700">3. The Solution</h4>
+                            <p class="text-sm text-teal-600">Demonstrate the relevant features live.</p>
+                        </div>
+                         <div class="text-gray-400 font-mono hidden md:block">&gt;&gt;</div>
+                        <div class="text-center p-4 rounded-lg bg-green-50 border border-green-200 w-full md:w-1/4">
+                            <h4 class="font-bold text-green-700">4. The "After"</h4>
+                            <p class="text-sm text-green-600">Showcase the transformed, better future state.</p>
+                        </div>
+                    </div>
+                     <p class="text-center mt-6 text-gray-600">Use real customer anecdotes and focus on quantifiable results to make the story resonate.</p>
+
+                     <div class="mt-8 pt-6 border-t border-gray-200">
+                        <h3 class="text-xl font-semibold text-teal-700 mb-4">✨ Generate Demo Narrative Hook</h3>
+                        <p class="text-gray-600 mb-4">Input a customer's current pain point and their desired future outcome, and let Gemini help you craft a compelling demo hook.</p>
+                        <div class="mb-4">
+                            <label for="painPoint" class="block text-sm font-medium text-gray-700">Customer's Pain Point:</label>
+                            <textarea id="painPoint" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm p-2"></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="desiredOutcome" class="block text-sm font-medium text-gray-700">Desired Outcome:</label>
+                            <textarea id="desiredOutcome" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm p-2"></textarea>
+                        </div>
+                        <button id="generateHookBtn" class="px-4 py-2 bg-teal-600 text-white font-semibold rounded-md shadow-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 flex items-center">
+                            <span class="mr-2">✨</span> Generate Narrative Hook
+                            <div id="hookSpinner" class="loading-spinner ml-2"></div>
+                        </button>
+                        <div id="generatedHookOutput" class="mt-6 p-4 bg-gray-100 rounded-lg border border-gray-200 text-gray-800 hidden"></div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="upsell" class="content-section">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800">Highlighting Upsell Benefits</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Introduce upsells not as features, but as natural extensions of the value you already provide.</p>
+                </div>
+                 <div class="bg-white p-8 rounded-lg border border-gray-200">
+                    <h3 class="text-2xl font-semibold text-center mb-6">The Problem-Solution-Impact Framework</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                        <div class="p-4 rounded-lg bg-gray-100">
+                            <h4 class="font-bold text-gray-800">Problem</h4>
+                            <p class="mt-2 text-gray-600">Reiterate a pain point the customer has now or will have as they scale.</p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-gray-100">
+                            <h4 class="font-bold text-gray-800">Solution</h4>
+                             <p class="mt-2 text-gray-600">Introduce the upsell feature as the direct, targeted solution.</p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-gray-100">
+                            <h4 class="font-bold text-gray-800">Impact</h4>
+                             <p class="mt-2 text-gray-600">Quantify the outcome: "Saves X hours," "Increases Y by Z%."</p>
+                        </div>
+                    </div>
+                    <div class="mt-8 text-center">
+                        <h4 class="font-semibold text-lg">Key Strategies</h4>
+                         <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside inline-block text-left">
+                            <li>Focus on the 1-3 most impactful upsells.</li>
+                            <li>Connect them to the customer's current usage.</li>
+                            <li>Subtly hint at ROI, don't hard-sell the price.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="objections" class="content-section">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800">Handling Questions & Objections</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Objections are opportunities in disguise. Handle them with grace to build trust and credibility.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg border border-gray-200">
+                         <h3 class="text-xl font-semibold text-teal-700 mb-4">Core Principles</h3>
+                         <ul class="space-y-3">
+                             <li class="flex items-start"><span class="mr-3 text-green-500">✓</span><span>**Welcome Questions:** Frame them as opportunities.</span></li>
+                             <li class="flex items-start"><span class="mr-3 text-green-500">✓</span><span>**Listen & Empathize:** Acknowledge their concern.</span></li>
+                             <li class="flex items-start"><span class="mr-3 text-green-500">✓</span><span>**Clarify Before Answering:** Make sure you understand.</span></li>
+                             <li class="flex items-start"><span class="mr-3 text-green-500">✓</span><span>**Be Honest:** If you don't know, promise to follow up.</span></li>
+                             <li class="flex items-start"><span class="mr-3 text-green-500">✓</span><span>**Don't Get Defensive:** Stay calm and professional.</span></li>
+                         </ul>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg border border-gray-200">
+                         <h3 class="text-xl font-semibold text-teal-700 mb-4">Reframe with the FAB Method</h3>
+                         <div class="space-y-4">
+                             <div>
+                                 <h4 class="font-bold">F - Feature</h4>
+                                 <p class="text-gray-600">Acknowledge the perceived limitation or objection.</p>
+                             </div>
+                             <div>
+                                 <h4 class="font-bold">A - Advantage</h4>
+                                 <p class="text-gray-600">Explain why it's not a limitation or how it's handled differently.</p>
+                             </div>
+                             <div>
+                                 <h4 class="font-bold">B - Benefit</h4>
+                                 <p class="text-gray-600">Reiterate the positive outcome and value *for them*.</p>
+                             </div>
+                         </div>
+                         <div class="mt-8 pt-6 border-t border-gray-200">
+                            <h3 class="text-xl font-semibold text-teal-700 mb-4">✨ Reframe Objection (FAB)</h3>
+                            <p class="text-gray-600 mb-4">Enter a customer objection, and Gemini will help you reframe it using the Feature-Advantage-Benefit (FAB) method.</p>
+                            <div class="mb-4">
+                                <label for="customerObjection" class="block text-sm font-medium text-gray-700">Customer Objection:</label>
+                                <textarea id="customerObjection" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm p-2"></textarea>
+                            </div>
+                            <button id="reframeObjectionBtn" class="px-4 py-2 bg-teal-600 text-white font-semibold rounded-md shadow-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 flex items-center">
+                                <span class="mr-2">✨</span> Reframe Objection (FAB)
+                                <div id="objectionSpinner" class="loading-spinner ml-2"></div>
+                            </button>
+                            <div id="reframedObjectionOutput" class="mt-6 p-4 bg-gray-100 rounded-lg border border-gray-200 text-gray-800 whitespace-pre-wrap hidden"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="delivery" class="content-section">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800">Best Practices for Setup & Delivery</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Success is 90% preparation. Use this checklist to ensure a smooth, professional, and impactful delivery every time.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg border border-gray-200 max-w-2xl mx-auto">
+                    <h3 class="text-xl font-semibold mb-4">Pre-Demo Checklist</h3>
+                    <div class="space-y-3">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check1" class="hidden">
+                            <label for="check1" class="flex items-center cursor-pointer">
+                                <span class="checklist-icon w-6 h-6 mr-3 border-2 border-gray-300 rounded-md flex items-center justify-center text-white">✓</span>
+                                <span>Run a full tech check (internet, audio, video).</span>
+                            </label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check2" class="hidden">
+                             <label for="check2" class="flex items-center cursor-pointer">
+                                <span class="checklist-icon w-6 h-6 mr-3 border-2 border-gray-300 rounded-md flex items-center justify-center text-white">✓</span>
+                                <span>Prepare a clean, uncluttered demo environment.</span>
+                            </label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check3" class="hidden">
+                             <label for="check3" class="flex items-center cursor-pointer">
+                                <span class="checklist-icon w-6 h-6 mr-3 border-2 border-gray-300 rounded-md flex items-center justify-center text-white">✓</span>
+                                <span>Have a backup plan (screenshots/video).</span>
+                            </label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check4" class="hidden">
+                             <label for="check4" class="flex items-center cursor-pointer">
+                                <span class="checklist-icon w-6 h-6 mr-3 border-2 border-gray-300 rounded-md flex items-center justify-center text-white">✓</span>
+                                <span>Populate with relevant, customer-specific data.</span>
+                            </label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check5" class="hidden">
+                             <label for="check5" class="flex items-center cursor-pointer">
+                                <span class="checklist-icon w-6 h-6 mr-3 border-2 border-gray-300 rounded-md flex items-center justify-center text-white">✓</span>
+                                <span>Practice the flow and transitions. Time yourself.</span>
+                            </label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check6" class="hidden">
+                             <label for="check6" class="flex items-center cursor-pointer">
+                                <span class="checklist-icon w-6 h-6 mr-3 border-2 border-gray-300 rounded-md flex items-center justify-center text-white">✓</span>
+                                <span>Define and confirm the "Next Steps."</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            const sections = document.querySelectorAll('.content-section');
+
+            function switchTab(tabId) {
+                tabs.forEach(tab => {
+                    if (tab.dataset.tab === tabId) {
+                        tab.classList.add('tab-active');
+                    } else {
+                        tab.classList.remove('tab-active');
+                    }
+                });
+
+                sections.forEach(section => {
+                    if (section.id === tabId) {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
+                    }
+                });
+            }
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    switchTab(tab.dataset.tab);
+                });
+            });
+
+            switchTab('communication');
+
+            // Gemini API Integration for Storytelling Hook
+            const painPointInput = document.getElementById('painPoint');
+            const desiredOutcomeInput = document.getElementById('desiredOutcome');
+            const generateHookBtn = document.getElementById('generateHookBtn');
+            const generatedHookOutput = document.getElementById('generatedHookOutput');
+            const hookSpinner = document.getElementById('hookSpinner');
+
+            generateHookBtn.addEventListener('click', async () => {
+                const painPoint = painPointInput.value.trim();
+                const desiredOutcome = desiredOutcomeInput.value.trim();
+
+                if (!painPoint || !desiredOutcome) {
+                    generatedHookOutput.classList.remove('hidden');
+                    generatedHookOutput.textContent = 'Please enter both the pain point and desired outcome.';
+                    return;
+                }
+
+                hookSpinner.style.display = 'block';
+                generateHookBtn.disabled = true;
+                generatedHookOutput.classList.add('hidden');
+
+                try {
+                    let chatHistory = [];
+                    const prompt = `As a demo specialist for a customer engagement platform, generate a compelling demo narrative hook. The customer's main pain point is "${painPoint}". Their desired outcome is "${desiredOutcome}". Focus on a concise, impactful opening statement that sets the stage for how our solution bridges this gap. Provide only the hook, no extra text.`;
+                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                    const payload = { contents: chatHistory };
+                    const apiKey = "";
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        generatedHookOutput.textContent = text;
+                        generatedHookOutput.classList.remove('hidden');
+                    } else {
+                        generatedHookOutput.textContent = 'Failed to generate hook. Please try again.';
+                        generatedHookOutput.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    generatedHookOutput.textContent = `Error: ${error.message}. Please check your input or try again later.`;
+                    generatedHookOutput.classList.remove('hidden');
+                } finally {
+                    hookSpinner.style.display = 'none';
+                    generateHookBtn.disabled = false;
+                }
+            });
+
+            // Gemini API Integration for Objection Rephrasing
+            const customerObjectionInput = document.getElementById('customerObjection');
+            const reframeObjectionBtn = document.getElementById('reframeObjectionBtn');
+            const reframedObjectionOutput = document.getElementById('reframedObjectionOutput');
+            const objectionSpinner = document.getElementById('objectionSpinner');
+
+            reframeObjectionBtn.addEventListener('click', async () => {
+                const objection = customerObjectionInput.value.trim();
+
+                if (!objection) {
+                    reframedObjectionOutput.classList.remove('hidden');
+                    reframedObjectionOutput.textContent = 'Please enter a customer objection.';
+                    return;
+                }
+
+                objectionSpinner.style.display = 'block';
+                reframeObjectionBtn.disabled = true;
+                reframedObjectionOutput.classList.add('hidden');
+
+                try {
+                    let chatHistory = [];
+                    const prompt = `Reframe the following customer objection using the Feature-Advantage-Benefit (FAB) method. Provide the Feature, Advantage, and Benefit clearly labeled. Objection: "${objection}"`;
+                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                    const payload = { contents: chatHistory };
+                    const apiKey = "";
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        reframedObjectionOutput.textContent = text;
+                        reframedObjectionOutput.classList.remove('hidden');
+                    } else {
+                        reframedObjectionOutput.textContent = 'Failed to reframe objection. Please try again.';
+                        reframedObjectionOutput.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    reframedObjectionOutput.textContent = `Error: ${error.message}. Please check your input or try again later.`;
+                    reframedObjectionOutput.classList.remove('hidden');
+                } finally {
+                    objectionSpinner.style.display = 'none';
+                    reframeObjectionBtn.disabled = false;
+                }
+            });
+        });
+    </script>
