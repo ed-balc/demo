@@ -408,7 +408,7 @@
                     const prompt = `As a demo specialist for a customer engagement platform, generate a compelling demo narrative hook. The customer's main pain point is "${painPoint}". Their desired outcome is "${desiredOutcome}". Focus on a concise, impactful opening statement that sets the stage for how our solution bridges this gap. Provide only the hook, no extra text.`;
                     chatHistory.push({ role: "user", parts: [{ text: prompt }] });
                     const payload = { contents: chatHistory };
-                    const apiKey = "";
+                    const apiKey = "AIzaSyBGL09v6PKoTPfxrWhrTEAhDN2AsLHeCaw";
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                     const response = await fetch(apiUrl, {
@@ -461,7 +461,7 @@
                     const prompt = `Reframe the following customer objection using the Feature-Advantage-Benefit (FAB) method. Provide the Feature, Advantage, and Benefit clearly labeled. Objection: "${objection}"`;
                     chatHistory.push({ role: "user", parts: [{ text: prompt }] });
                     const payload = { contents: chatHistory };
-                    const apiKey = "";
+                    const apiKey = "AIzaSyBGL09v6PKoTPfxrWhrTEAhDN2AsLHeCaw";
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                     const response = await fetch(apiUrl, {
